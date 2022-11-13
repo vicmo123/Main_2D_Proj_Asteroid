@@ -21,7 +21,7 @@ public class SpaceShipManager
 
     //SPaceship
     private GameObject spaceShipPrefab;
-    private GameObject spaceShip;
+    public GameObject spaceShip { get; private set; }
     private Rigidbody2D rb;
     public float rocketForce = 3.0f;
     public float rocketTorque = 1.1f;

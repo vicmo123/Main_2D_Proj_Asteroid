@@ -40,13 +40,17 @@ public class GameManager
     public const float LIMIT_LEFT = -9.8f;
     public const float LIMIT_RIGHT = 9.8f;
 
+    public bool StartGameButtonPressed { get; set; }
+
     public void Initialize()
     {
+        StartGameButtonPressed = false;
+
         gamePhases = GamePhase.MainMenuWaiting;
 
+        MainMenuManager.Instance.Initialize();
         SpaceShipManager.Instance.Initialize();
         AsteroidManager.Instance.Initialize();
-        MainMenuManager.Instance.Initialize();
         SoundManager.Instance.Initialize();
     }
 
@@ -83,11 +87,11 @@ public class GameManager
         }
     }
 
-    private void MainMenuWaitingUpdate()
+    public void MainMenuWaitingUpdate()
     {
-        MainMenuManager.Instance.Refresh();
+        MainMenuManager.Instance.Refresh(StartGameButtonPressed);
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (StartGameButtonPressed) {
             gamePhases = GamePhase.Setup;
         }
     }
