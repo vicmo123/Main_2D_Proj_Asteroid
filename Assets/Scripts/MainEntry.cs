@@ -26,5 +26,12 @@ public class MainEntry : MonoBehaviour
     public void StartGame()
     {
         GameManager.Instance.StartGameButtonPressed = true;
+
+        BulletManager.Instance.shotFiredEvent.AddListener(StartBulletCoroutine);
+    }
+
+    public void StartBulletCoroutine()
+    {
+        BulletManager.Instance.monoParser(this);
     }
 }

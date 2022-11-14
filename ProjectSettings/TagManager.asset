@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - MainMenu
+  - BigAsteroid
+  - MediumAsteroid
+  - SmallAsteroid
   layers:
   - Default
   - TransparentFX

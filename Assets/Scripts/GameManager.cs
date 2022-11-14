@@ -51,6 +51,7 @@ public class GameManager
         MainMenuManager.Instance.Initialize();
         SpaceShipManager.Instance.Initialize();
         AsteroidManager.Instance.Initialize();
+        BulletManager.Instance.Initialize();
         SoundManager.Instance.Initialize();
     }
 
@@ -84,6 +85,7 @@ public class GameManager
         {
             SpaceShipManager.Instance.PhysicsRefresh();
             AsteroidManager.Instance.PhysicsResfresh();
+            BulletManager.Instance.PhysicsRefresh();
         }
     }
 
@@ -101,11 +103,14 @@ public class GameManager
         SpaceShipManager.Instance.SecondInitialize();
         AsteroidManager.Instance.SecondInitialize(initalNumAsteroids + round * additionNumAsteroids);
 
+        BulletManager.Instance.SecondInitialize();
+
         gamePhases = GamePhase.AsteroidDestruction;
     }
 
     private void AsteroidDestructionUpdate()
     {
+        BulletManager.Instance.Refresh();
         SpaceShipManager.Instance.Refresh();
         AsteroidManager.Instance.Refresh();
     }

@@ -25,7 +25,7 @@ public class MainMenuManager
     public void Initialize()
     {
         mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
-        mainMenu.SetActive(true);
+        CreateMainMenu();
     }
 
     public void Refresh(bool disableMenu)
@@ -38,6 +38,6 @@ public class MainMenuManager
 
     public void CreateMainMenu()
     {
-
+        mainMenu.SetActive(true);
     }
 }

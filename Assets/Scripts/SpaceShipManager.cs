@@ -23,6 +23,7 @@ public class SpaceShipManager
     private GameObject spaceShipPrefab;
     public GameObject spaceShip { get; private set; }
     private Rigidbody2D rb;
+    public float spaceShipRadius = 0.48f;
     public float rocketForce = 3.0f;
     public float rocketTorque = 1.1f;
 
@@ -32,8 +33,6 @@ public class SpaceShipManager
     public float thrusterGrowth = 0.5f;
     public float thrusterMin = 0;
     public float thrusterMax = 0.8f;
-
-    
 
     public void Initialize()
     {
@@ -66,7 +65,7 @@ public class SpaceShipManager
 
     public void UpdateMoveShip()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.W))
         {
             //Full force reactor
             rb.AddRelativeForce(new Vector2(0, rocketForce), ForceMode2D.Force);
