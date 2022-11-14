@@ -229,11 +229,10 @@ public class AsteroidManager
     private void CheckCollisionWithSpaceShip()
     {
         foreach (Rigidbody2D asteroid in tabAsteroid)
-        {
-            
-            if (((Vector2)SpaceShipManager.Instance.spaceShip.transform.position - asteroid.position).magnitude <= (Radius * asteroid.transform.localScale.x) + SpaceShipManager.Instance.spaceShipRadius && asteroid != null)
+        { 
+            if ((asteroid.position - (Vector2)SpaceShipManager.Instance.spaceShip.transform.position).magnitude <= (Radius * asteroid.transform.localScale.x) + SpaceShipManager.Instance.spaceShipRadius && asteroid != null)
             {
-
+                Debug.Log("Ship is dead");
                 //GameObject.Destroy(SpaceShipManager.Instance.spaceShip.gameObject);
                 //GameObject.Destroy(asteroid.gameObject);
             }
