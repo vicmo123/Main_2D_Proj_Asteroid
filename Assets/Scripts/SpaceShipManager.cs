@@ -21,6 +21,8 @@ public class SpaceShipManager
 
     //SPaceship
     private GameObject spaceShipPrefab;
+    private Animator explosionAnim;
+    private AnimationClip explosionClip;
     public GameObject spaceShip { get; private set; }
     private Rigidbody2D rb;
     public float spaceShipRadius = 0.48f;
@@ -37,6 +39,11 @@ public class SpaceShipManager
     public void Initialize()
     {
         spaceShipPrefab = Resources.Load<GameObject>("Prefabs/Spaceship");
+
+        explosionAnim = spaceShipPrefab.GetComponent<Animator>();
+//explosionAnim.enabled = false;
+
+        explosionClip = Resources.Load<AnimationClip>("Prefabs/Explosion");
     }
 
     public void SecondInitialize()
@@ -145,5 +152,17 @@ public class SpaceShipManager
         {
             spaceShip.transform.position = spaceShip.transform.position;
         }
+    }
+
+    public void DestroyShip()
+    {
+        //rb.constraints = RigidbodyConstraints2D.FreezeAll;
+
+        explosionAnim.enabled = true;
+
+        //explosionAnim.Play(explosionClip.name);
+        rb.velocity = new Vector2(0,0);
+        spaceShip.transform.position = new Vector3( 0, 0, -1);
+        SoundManager.Instance.PlayExplosionSound();
     }
 }

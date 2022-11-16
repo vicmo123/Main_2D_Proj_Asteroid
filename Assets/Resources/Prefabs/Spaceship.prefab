@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2895855572820276975}
   - component: {fileID: 1155130456045796237}
+  - component: {fileID: 8482907998977787294}
   m_Layer: 0
   m_Name: Spaceship
   m_TagString: Untagged
@@ -55,6 +56,26 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &8482907998977787294
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674385719685614942}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: beb35e57529f2324296abe3a398aba7e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &891617849444811368
 GameObject:
   m_ObjectHideFlags: 0

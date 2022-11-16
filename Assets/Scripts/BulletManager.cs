@@ -22,6 +22,7 @@ public class BulletManager
 
     private GameObject bulletPrefab;
     private Transform spaceShipPosition;
+    private ParticleSystem particleEffect;
 
     //from circle collider -> radius
     private float bulletRadius = 0.15f;
@@ -33,23 +34,33 @@ public class BulletManager
     public UnityEvent shotFiredEvent;
     public UnityEvent<Rigidbody2D> AsteroidCollisionEvent;
 
-    public void monoParser(MonoBehaviour mono)
-    {
-        //We can now use StartCoroutine from MonoBehaviour in a non MonoBehaviour script
-        mono.StartCoroutine(MoveAndDetroyBullet());
+    public int points = 250;
 
-        //And also use StopCoroutine function
-        mono.StopCoroutine(MoveAndDetroyBullet());
+    public void monoParser(MonoBehaviour mono, int i, Rigidbody2D rb = null)
+    {
+        if(i == 0)
+        {
+            mono.StartCoroutine(MoveAndDetroyBullet());
+            mono.StopCoroutine(MoveAndDetroyBullet());
+        }
+        if(i == 1)
+        {
+            mono.StartCoroutine(ParticleSystemAnimation(rb));
+            mono.StopCoroutine(ParticleSystemAnimation(rb));
+        }
     }
 
     public void Initialize()
     {
         shotFiredEvent = new UnityEvent();
+
         AsteroidCollisionEvent = new UnityEvent<Rigidbody2D>();
 
         bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
         tabBullets = new List<Rigidbody2D>();
+
+        particleEffect = Resources.Load<ParticleSystem>("Prefabs/Particle System");
     }
 
     public void SecondInitialize()
@@ -76,7 +87,9 @@ public class BulletManager
     }
 
     IEnumerator MoveAndDetroyBullet()
-    {  
+    {
+        SoundManager.Instance.PlayShootSound();
+
         GameObject bullet = GameObject.Instantiate(bulletPrefab, spaceShipPosition.position, Quaternion.identity);
 
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
@@ -91,6 +104,20 @@ public class BulletManager
             GameObject.Destroy(rb.gameObject);
         }
         tabBullets.Remove(rb);
+    }
+
+    IEnumerator ParticleSystemAnimation(Rigidbody2D rb)
+    {
+        ParticleSystem psys = GameObject.Instantiate(particleEffect).GetComponent<ParticleSystem>();
+
+        psys.transform.position = rb.transform.position;
+        psys.Play();
+       
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject.Destroy(psys.gameObject);
+
+        Debug.Log("Hey");
     }
 
     private void RespawnPlayerWhenOutOfMap()
@@ -153,12 +180,24 @@ public class BulletManager
 
                                 if (bulletToAsteroid.magnitude <= (AsteroidManager.Instance.Radius * AsteroidManager.Instance.tabAsteroid[j].transform.localScale.x) + bulletRadius)
                                 {
+                                    SoundManager.Instance.PlayCollisionSound();
+
+                                    GameManager.Instance.score += Mathf.RoundToInt(points * AsteroidManager.Instance.tabAsteroid[j].transform.localScale.x);
+
+                                    AsteroidManager.Instance.QuantityOfAsteroidToDestroyInRound--;
+                                    Debug.Log(AsteroidManager.Instance.QuantityOfAsteroidToDestroyInRound);
+
                                     GameObject.Destroy(tabBullets[i].gameObject);
+
+                                    //Temporary doesnt seem to work with event
+                                    //MainEntry temp = new MainEntry();
+                                    //temp.StartExplosionCoroutine(AsteroidManager.Instance.tabAsteroid[j]);
+                                    //GameObject.Destroy(temp);
+
                                     AsteroidCollisionEvent.Invoke(AsteroidManager.Instance.tabAsteroid[j]);
 
                                     tabBullets.Remove(tabBullets[i]);
                                     AsteroidManager.Instance.tabAsteroid.Remove(AsteroidManager.Instance.tabAsteroid[j]);
-
                                 }
                             }
                         }

@@ -20,12 +20,15 @@ public class MainMenuManager
     private MainMenuManager() { }
     #endregion
 
+    public GameObject canvas { get; private set; }
     private GameObject mainMenu;
-    
+
     public void Initialize()
     {
-        mainMenu = GameObject.FindGameObjectWithTag("MainMenu");
-        CreateMainMenu();
+        canvas = GameObject.FindGameObjectWithTag("MainMenu");
+        mainMenu = canvas.transform.GetChild(0).gameObject;
+
+        ShowMainMenu();
     }
 
     public void Refresh(bool disableMenu)
@@ -36,7 +39,7 @@ public class MainMenuManager
         }
     }
 
-    public void CreateMainMenu()
+    public void ShowMainMenu()
     {
         mainMenu.SetActive(true);
     }

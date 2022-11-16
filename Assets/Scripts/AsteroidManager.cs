@@ -22,6 +22,7 @@ public class AsteroidManager
     public GameObject asteroidPrefab;
     public List<Rigidbody2D> tabAsteroid { get; private set; }
     public float Radius { get; private set; }
+    public float QuantityOfAsteroidToDestroyInRound { get; set; }
 
     public int intialNumberAsteroids;
     public float spawnRate = 3f;
@@ -44,6 +45,8 @@ public class AsteroidManager
     private float nextActionTime = 0.0f;
     public float period = 3.0f;
 
+    int counter;
+
     public void Initialize()
     {
         Radius = 0.61f;
@@ -55,10 +58,16 @@ public class AsteroidManager
         intialNumberAsteroids = numAsteroids;
         tabAsteroid = new List<Rigidbody2D>();
 
+        BulletManager.Instance.AsteroidCollisionEvent.RemoveAllListeners();
+
         BulletManager.Instance.AsteroidCollisionEvent.AddListener(SplitAsteroid);
+
+        QuantityOfAsteroidToDestroyInRound = (intialNumberAsteroids + (intialNumberAsteroids * qtyMedium) + ((intialNumberAsteroids * qtyMedium)) * 3);
+
+        counter = 0;
     }
 
-    int counter = 0;
+    
 
     public void Refresh()
     {
@@ -74,7 +83,6 @@ public class AsteroidManager
                 counter++;
             }
         }
-
 
         CheckCollisionWithSpaceShip();
 
@@ -228,19 +236,52 @@ public class AsteroidManager
 
     private void CheckCollisionWithSpaceShip()
     {
-        foreach (Rigidbody2D asteroid in tabAsteroid)
-        { 
-            if ((asteroid.position - (Vector2)SpaceShipManager.Instance.spaceShip.transform.position).magnitude <= (Radius * asteroid.transform.localScale.x) + SpaceShipManager.Instance.spaceShipRadius && asteroid != null)
+        try
+        {
+            foreach (Rigidbody2D asteroid in tabAsteroid)
             {
-                Debug.Log("Ship is dead");
-                //GameObject.Destroy(SpaceShipManager.Instance.spaceShip.gameObject);
-                //GameObject.Destroy(asteroid.gameObject);
+                if (asteroid)
+                {
+                    Vector2 spaceShipToAsteroid = asteroid.transform.position - SpaceShipManager.Instance.spaceShip.transform.position;
+
+                    if ((spaceShipToAsteroid).magnitude <= (Radius * asteroid.transform.localScale.x) + SpaceShipManager.Instance.spaceShipRadius)
+                    {
+                        //Debug.Log((spaceShipToAsteroid).magnitude);
+                        //Debug.Log((Radius * asteroid.transform.localScale.x) + SpaceShipManager.Instance.spaceShipRadius);
+                        BulletManager.Instance.AsteroidCollisionEvent.Invoke(asteroid);
+
+                        Debug.Log("Ship is dead");
+                        SpaceShipManager.Instance.DestroyShip();
+                        PlayerStatsUiManager.Instance.RemoveLife();
+                        //GameObject.Destroy(SpaceShipManager.Instance.spaceShip.gameObject);
+                        //GameObject.Destroy(asteroid.gameObject);
+                        break;
+                    }
+                }
             }
         }
+        catch (System.ArgumentOutOfRangeException)
+        {
+            Debug.Log("Argument out of range");
+        }
+        
     }
 
     private void CleanList()
     {
         tabAsteroid.RemoveAll(item => item == null);
+    }
+
+    public void ClearAllAsteroids()
+    {
+        for (int i = 0; i < tabAsteroid.Count; i++)
+        {
+            if (tabAsteroid[i])
+            {
+                GameObject.Destroy(tabAsteroid[i].gameObject);
+            }
+        }
+
+        CleanList();
     }
 }
